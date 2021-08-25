@@ -1,0 +1,28 @@
+version: "3.7"
+
+volumes:
+  gitlab-config:
+    driver: local
+  gitlab-logs:
+    driver: local
+  gitlab-data:
+    driver: local
+
+services:
+  ci: 
+    image: gitlab/gitlab-ce:10.2.8-ce.0
+    restart: always
+    hostname: 'git.openmate-on.co.kr'
+    container_name: gitlab
+    ports: 
+      - "22:22"
+      - "80:80"
+      - "443:443"
+    volumes: 
+      - gitlab-config:/etc/gitlab
+      - gitlab-logs:/var/log/gitlab
+      - gitlab-data:/var/opt/gitlab
+      - "Enter the host path to save backups":/backups
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+        - TZ=Asia/Seoul

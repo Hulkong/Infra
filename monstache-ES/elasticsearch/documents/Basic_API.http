@@ -1,0 +1,27 @@
+# 1. 기본명령
+### 시스템 메타 목록
+GET http://localhost:9200/_cat HTTP/1.1
+
+
+### 노드 목록
+GET http://localhost:9200/_cat/nodes?v HTTP/1.1
+
+
+### health check
+GET http://localhost:9200/_cat/health?v HTTP/1.1
+
+
+### 인덱스 목록
+GET http://localhost:9200/_cat/indices?v HTTP/1.1
+
+
+### 템플릿 목록
+GET http://localhost:9200/_cat/templates?v HTTP/1.1
+
+
+### alias 목록
+GET http://localhost:9200/_cat/aliases?v HTTP/1.1
+
+
+### count
+GET http://localhost:9200/_cat/count?v HTTP/1.1

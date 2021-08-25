@@ -1,0 +1,22 @@
+version: "3.7"
+
+volumes:
+  dump:
+    driver: local
+
+services:
+    mongodb:
+        container_name: "Please enter the container name."
+        image: mongo:4.4.6
+        restart: always
+        volumes: 
+            - /etc/localtime:/etc/localtime:ro
+            - "Enter the host path the save the data.":/data/db
+            - dump:/dump
+        ports: 
+            - "${MONGO_PORT}:27017"
+        env_file:
+            - .env
+        command: [--auth]
+        privileged: true
+        tty: true

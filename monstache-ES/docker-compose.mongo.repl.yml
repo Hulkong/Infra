@@ -1,0 +1,67 @@
+version: "3"
+
+services:
+  openssl:
+    image: "mongo:4.0.0"
+    container_name: "mongo-repl-openssl"
+    volumes:
+      - mongo_share:/mongo_share
+      - ./mongodb/init/create-ssl.sh:/start.sh
+    command: /start.sh
+
+  # primary
+  mongo1:
+    image: "mongo:4.0.0"
+    container_name: "mongo-repl-mongo1"
+    ports:
+      - "27020:27017"
+    volumes:
+      - ./mongodb/mongo1:/data/db
+      - mongo_share:/mongo_share
+    env_file:
+      - ./mongodb/.env
+    command: mongod --replSet replication --keyFile /mongo_share/ssl.key --journal --bind_ip_all
+    depends_on:
+      - openssl
+
+  mongo2:
+    image: "mongo:4.0.0"
+    container_name: "mongo-repl-mongo2"
+    ports:
+      - "27021:27017"
+    volumes:
+      - ./mongodb/mongo2:/data/db
+      - mongo_share:/mongo_share
+    command: mongod --replSet replication --keyFile /mongo_share/ssl.key --journal --bind_ip_all
+    depends_on:
+      - mongo1
+
+  mongo3:
+    image: "mongo:4.0.0"
+    container_name: "mongo-repl-mongo3"
+    ports:
+      - "27022:27017"
+    volumes:
+      - ./mongodb/mongo3:/data/db
+      - mongo_share:/mongo_share
+    command: mongod --replSet replication --keyFile /mongo_share/ssl.key --journal --bind_ip_all
+    depends_on:
+      - mongo2
+
+  mongosetup:
+    build:
+      context: ./mongodb
+      dockerfile: Dockerfile
+    container_name: "setup-rspl"
+    volumes:
+      - mongo_share:/mongo_share
+    depends_on:
+      - mongo1
+
+volumes:
+  mongo_share:
+
+networks:
+  default:
+    external:
+      name: elastic-network

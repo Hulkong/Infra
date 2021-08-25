@@ -1,0 +1,28 @@
+version: "3.7"
+
+volumes:
+  dump:
+    driver: local
+
+services:
+  db:
+    image: mdillon/postgis
+    restart: always
+    container_name: "Please enter the container name."
+    volumes: 
+      - /etc/localtime:/etc/localtime:ro
+      - "Enter the host path to save the data.":/var/lib/postgresql/data
+      - "Enter the host path to save the potgresql.conf file.":/var/lib/postgresql/data/postgresql.conf
+      - "Enter the host path to save the pg_hba.conf file.":/var/lib/postgresql/data/pg_hba.conf
+      - dump:/dump
+    environment:
+        - TZ=Asia/Seoul
+        - POSTGRES_DB=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD="Please enter the password."
+        - POSTGRES_INITDB_ARGS=--encoding=UTF-8
+    ports: 
+      - "Please enter the host port.":5432
+    shm_size: 16gb
+    privileged: true
+    tty: true

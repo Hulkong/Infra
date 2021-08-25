@@ -1,0 +1,56 @@
+version: "3"
+
+services:
+  elasticsearch:
+    restart: always
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.14
+    container_name: "elasticsearch"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - ES_JAVA_OPTS=-Xms2048m -Xmx2048m
+      - discovery.type=single-node
+    healthcheck:
+      test: "wget -q -O - http://localhost:9200/_cat/health"
+      interval: 1s
+      timeout: 30s
+      retries: 300
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./elasticsearch/data:/usr/share/elasticsearch/data
+
+  kibana:
+    restart: always
+    image: docker.elastic.co/kibana/kibana:6.8.14
+    container_name: "kibana"
+    expose:
+      - 5601
+    ports:
+      - 5601:5601
+    depends_on:
+      - monstache
+    environment:
+      - SERVER_PORT=5601
+      - SERVER_NAME=kibana.example.org
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+
+  monstache:
+    restart: always
+    image: rwynn/monstache:rel5
+    container_name: "monstache"
+    command: -f /home/monstache.config.toml &
+    volumes:
+      - ./config/monstache.config.toml:/home/monstache.config.toml
+    depends_on:
+      - elasticsearch
+    ports:
+      - "8080:8080"
+
+networks:
+  default:
+    external:
+      name: elastic-network

@@ -1,0 +1,128 @@
+{
+    "settings": {
+        "analysis": {
+            "tokenizer": {
+                "nori_none": {
+                    "type": "nori_tokenizer",
+                    "decompound_mode": "none"
+                },
+                "nori_discard": {
+                    "type": "nori_tokenizer",
+                    "decompound_mode": "discard"
+                },
+                "nori_mixed": {
+                    "type": "nori_tokenizer",
+                    "decompound_mode": "mixed",
+                    "user_dictionary_rules": []
+                }
+            },
+            "analyzer": {
+                "openmateon_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "nori_mixed",
+                    "filter": [
+                        "lowercase",
+                        "stop",
+                        "snowball"
+                    ]
+                }
+            }
+        }
+    },
+    "mappings": {
+        "_doc": {
+            "dynamic": false,
+            "properties": {
+                "dataAdmiNum": {
+                    "type": "keyword"
+                },
+                "title": {
+                    "type": "text",
+                    "analyzer": "openmateon_analyzer",
+                    "search_analyzer": "openmateon_analyzer"
+                },
+                "publicFlg": {
+                    "type": "keyword"
+                },
+                "organ": {
+                    "type": "keyword"
+                },
+                "regionFilter": {
+                    "type": "keyword"
+                },
+                "regionCd": {
+                    "type": "keyword"
+                },
+                "hit": {
+                    "type": "integer"
+                },
+                "drawerCnt": {
+                    "type": "integer"
+                },
+                "avgRating": {
+                    "type": "float"
+                },
+                "tags": {
+                    "type": "text",
+                    "analyzer": "openmateon_analyzer",
+                    "search_analyzer": "openmateon_analyzer",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "format": {
+                    "properties": {
+                        "extsn": {
+                            "type": "keyword"
+                        },
+                        "url": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "price": {
+                    "type": "keyword"
+                },
+                "description": {
+                    "type": "text",
+                    "analyzer": "openmateon_analyzer",
+                    "search_analyzer": "openmateon_analyzer"
+                },
+                "originSiteNm": {
+                    "type": "text",
+                    "analyzer": "openmateon_analyzer",
+                    "search_analyzer": "openmateon_analyzer",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "originUrl": {
+                    "type": "keyword"
+                },
+                "regDate": {
+                    "type": "date"
+                },
+                "regCycle": {
+                    "type": "keyword"
+                },
+                "kwd": {
+                    "type": "keyword"
+                },
+                "contactChannel": {
+                    "type": "keyword"
+                },
+                "fields": {
+                    "type": "text",
+                    "analyzer": "openmateon_analyzer",
+                    "search_analyzer": "openmateon_analyzer"
+                }
+            }
+        }
+    }
+}

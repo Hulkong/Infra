@@ -1,0 +1,97 @@
+# document
+### Bulk 삽입
+### ex) curl -XPOST http://localhost:9200/dataon.searches/_bulk?pretty --data-binary @documents.json -H 'Content-Type: application/json'
+
+
+### 단건 삽입
+PUT http://localhost:9200/dataon.searches/_doc/1 
+Content-Type: application/json
+
+{
+  "boardKey" : "board_w30fi31weasd",
+  "title" : "엘라스틱서치 너무 재미있어요."
+}
+
+
+### 개수조회
+GET http://localhost:9200/searches/_count HTTP/1.1
+
+
+### 특정 document 조회
+### ex) curl -XGET http://localhost:9200/dataon.searches/result/1/?pretty
+GET http://localhost:9200/dataon.searches/_doc/1/?pretty HTTP/1.1
+
+
+### 전체 document 검색
+GET http://localhost:9200/dataon.searches/_search HTTP/1.1
+
+
+### 질의 - 쿼리스트링(Querystring)
+GET http://localhost:9200/dataon.searches/_search?q=공공 HTTP/1.1
+
+
+### 질의 - 데이터본문(Data Body)
+GET http://localhost:9200/dataon.searches/_search HTTP/1.1
+Content-Type: application/json
+
+{
+    "query": {
+        "bool": {
+            "must": {
+                "multi_match": {
+                    "query": "서울특별시",
+                    "fields": ["title", "description", "tags", "fields"]
+                }
+            }
+        }
+    }
+}
+
+
+### 질의 - example1
+GET http://localhost:9200/dataon.searches_service/_search HTTP/1.1
+Content-Type: application/json
+
+{
+    "query": {
+        "bool": {
+            "must": {
+                "multi_match": {
+                    "query": "교통",
+                    "fields": ["title", "description", "tags", "fields"]
+                }
+            },
+            "filter": {
+                "bool": {
+                    "must": [
+                        {
+                            "terms": {
+                                "format.extsn": ["CSV"]
+                            }
+                        },
+                        {
+                            "range": {
+                                "regDate": {
+                                    "gte": "2020-06-01",
+                                    "lte": "2021-06-30"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "aggs": {
+        "group_by_format": {
+            "terms": {
+                "field": "format.extsn"
+            }
+        },
+        "group_by_organ": {
+            "terms": {
+                "field": "organ" 
+            }
+        }
+    }
+}

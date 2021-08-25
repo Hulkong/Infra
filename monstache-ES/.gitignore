@@ -1,0 +1,7 @@
+elasticsearch/data/*
+
+mongodb/backup
+
+mongodb/mongo*/*
+
+.env

@@ -1,0 +1,66 @@
+# nori
+### default 형태소분석기 테스트
+GET http://localhost:9200/_analyze?pretty HTTP/1.1
+Content-Type: application/json
+
+{
+	"analyzer": "standard", 
+	"text": "자연어처리란????!"
+}
+
+
+### nori 형태소분석기 정상 테스트1
+GET http://localhost:9200/_analyze?pretty HTTP/1.1
+Content-Type: application/json
+
+{
+	"analyzer": "nori", 
+	"text": "자연어처리란????!",
+	"explain": true
+}
+
+
+### nori 형태소분석기 정상 테스트2
+GET http://localhost:9200/_analyze?pretty HTTP/1.1
+Content-Type: application/json
+
+{
+	"analyzer": "nori", 
+	"text": "자연어처리란????!", 
+	"attributes" : [
+		"posType", 
+		"leftPOS", 
+		"rightPOS", 
+		"morphemes", 
+		"reading"
+	], 
+	"explain": true 
+}
+
+### POST 형식으로 테스트
+POST http://localhost:9200/_analyze HTTP/1.1
+content-type: application/json
+
+{
+	"analyzer" : "nori",
+	"text" : "아버지가 방에 들어가신다"
+}
+
+### 형태소분석기 설정
+PUT http://localhost:9200/dataon.searches HTTP/1.1
+Content-Type: application/json
+
+{
+	"settings": {
+		"analysis": {
+			"tokenizer": {
+			"my_nori_tokenizer": {
+				"type": "nori_tokenizer",
+				"user_dictionary_rules": [
+				"해물"
+				]
+			}
+			}
+		}
+	}
+}
